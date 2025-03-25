@@ -3,3 +3,5 @@ docker build -t ai-evolver .
 docker run -it --rm \
   -v ollama_models:/root/.ollama \
   ai-evolver
+
+docker run -it --rm -v ollama_models:/root/.ollama ai-evolver
