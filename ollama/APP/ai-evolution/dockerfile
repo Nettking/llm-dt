@@ -1,0 +1,29 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# --- System packages ---
+RUN apt-get update && apt-get install -y \
+    curl \
+    python3 \
+    python3-pip \
+    ca-certificates \
+    && apt-get clean
+
+# --- Install Ollama ---
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# --- Working dir + files ---
+WORKDIR /app
+COPY requirements.txt ./
+COPY evolve.py pull.py wait_for_ollama.py ./
+
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+EXPOSE 11434
+
+# --- Start Ollama, wait, pull if needed, then evolve ---
+CMD ollama serve & \
+    python3 wait_for_ollama.py && \
+    python3 pull.py && \
+    python3 evolve.py
