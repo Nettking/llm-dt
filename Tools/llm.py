@@ -10,7 +10,7 @@ from datetime import datetime
 
 
 class LLM:
-    def __init__(self, host="localhost:11434", model="llama3:latest"):
+    def __init__(self, host="localhost:11434", model="llama3.1:latest"):
         self.host = host
         self.model = model
 
