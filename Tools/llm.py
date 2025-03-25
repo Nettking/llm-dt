@@ -15,17 +15,32 @@ class LLM:
         self.model = model
 
     def _chat(self, prompt: str) -> str:
+    try:
         response = requests.post(
             f"http://{self.host}/api/chat",
             json={"model": self.model, "messages": [{"role": "user", "content": prompt}]},
             stream=True
         )
+
+        if response.status_code != 200:
+            print(f"❌ Error {response.status_code}: {response.text}")
+            return ""
+
         full_response = ""
         for line in response.iter_lines():
             if line:
                 data = json.loads(line.decode("utf-8"))
-                full_response += data.get("message", {}).get("content", "")
+                content = data.get("message", {}).get("content", "")
+                full_response += content
+        if not full_response:
+            print("⚠️ Warning: Ollama returned an empty response.")
+
         return full_response.strip()
+
+    except requests.exceptions.RequestException as e:
+        print("❌ Failed to contact Ollama:", e)
+        return ""
+
 
     def clean_code(self, response: str) -> str:
         code_blocks = re.findall(r"```(?:python)?\n(.*?)```", response, re.DOTALL)
