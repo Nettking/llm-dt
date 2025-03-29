@@ -1,5 +1,7 @@
 docker build -t ai-evolver .
 
+docker build --no-cache -t ai-evolver .
+
 docker run -it --rm \
   -v ollama_models:/root/.ollama \
   ai-evolver
