@@ -14,13 +14,11 @@ RUN apt-get update && apt-get install -y \
 # --- Install Ollama ---
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
-# --- Clone repo first (to get requirements.txt)
+# --- Set working directory and copy source
 WORKDIR /app
-RUN git clone https://github.com/Nettking/llm-dt.git .
-RUN git pull
+COPY . .
 
-# --- Install Python dependencies before copying everything else (caching)
-COPY requirements.txt .
+# --- Install Python dependencies ---
 RUN pip3 install -r requirements.txt
 
 # --- Expose Ollama's port ---
@@ -29,11 +27,9 @@ EXPOSE 11434
 # --- Declare persistent model volume ---
 VOLUME ["/root/.ollama"]
 
-# --- Start Ollama, wait, pull model, then run the app ---
-    CMD ollama serve & \
+# --- Start everything ---
+CMD ollama serve & \
     sleep 2 && \
-    cd /app && \
-    git pull && \
     python3 Tools/wait_for_ollama.py && \
     python3 Tools/pull.py && \
     python3 run.py
