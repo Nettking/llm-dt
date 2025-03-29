@@ -17,6 +17,7 @@ RUN curl -fsSL https://ollama.com/install.sh | sh
 # --- Clone repo first (to get requirements.txt)
 WORKDIR /app
 RUN git clone https://github.com/Nettking/llm-dt.git .
+RUN git pull
 
 # --- Install Python dependencies before copying everything else (caching)
 COPY requirements.txt .
@@ -32,7 +33,6 @@ VOLUME ["/root/.ollama"]
     CMD ollama serve & \
     sleep 2 && \
     cd /app && \
-    git pull && \
     python3 Tools/wait_for_ollama.py && \
     python3 Tools/pull.py && \
     python3 run.py
