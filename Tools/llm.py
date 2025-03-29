@@ -10,9 +10,33 @@ from datetime import datetime
 
 
 class LLM:
-    def __init__(self, host="localhost:11434", model="llama3.1:latest"):
+    def __init__(self, host="localhost:11434", model=None):
         self.host = host
         self.model = model
+        if self.model is None:
+            self.choose_model()
+
+    def choose_model(self):
+        tags_data = self.wait_for_tags()
+        models = tags_data.get("models", [])
+        if not models:
+            print("❌ No models available.")
+            return
+
+        print("📦 Available models:")
+        for idx, model in enumerate(models):
+            print(f"{idx + 1}. {model['name']}")
+
+        while True:
+            choice = input(f"\n🔧 Choose a model by number (1-{len(models)}): ")
+            if choice.isdigit():
+                index = int(choice) - 1
+                if 0 <= index < len(models):
+                    self.model = models[index]["name"]
+                    print(f"✅ Model set to '{self.model}'")
+                    return
+            print("❌ Invalid selection. Try again.")
+
 
     def _chat(self, prompt: str) -> str:
         try:
