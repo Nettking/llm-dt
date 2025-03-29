@@ -4,20 +4,27 @@ from llama_index.llms.ollama import Ollama
 from llm import LLM
 
 
+def find_docs_folder(start_path="."):
+    for root, dirs, _ in os.walk(start_path):
+        if "docs" in dirs:
+            return os.path.join(root, "docs")
+    return None
+
 
 def main():
-    # Step 1: Load documents from "docs" folder
-    docs_path = "/Tools/docs"
-    if not os.path.exists(docs_path):
-        print("❌ 'docs' folder not found.")
+    # Step 1: Locate the 'docs' folder anywhere in the project
+    docs_path = find_docs_folder(os.path.dirname(__file__))
+
+    if not docs_path or not os.path.exists(docs_path):
+        print("❌ Could not find a 'docs' folder anywhere in the project.")
         return
 
-    print("📄 Loading documents from 'docs'...")
+    print(f"📄 Found and loading documents from: {docs_path}")
     documents = SimpleDirectoryReader(docs_path).load_data()
 
     # Step 2: Use your custom LLM wrapper to select or set a model
     core_llm = LLM()
-    
+
     # Step 3: Wrap it with llama-index's Ollama-compatible interface
     index_llm = Ollama(model=core_llm.model)
 
