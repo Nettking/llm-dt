@@ -14,12 +14,17 @@ RUN apt-get update && apt-get install -y \
 # --- Install Ollama ---
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
-# --- Set working directory and copy source
+# --- Set working directory
 WORKDIR /app
-COPY . .
 
-# --- Install Python dependencies ---
+# --- Copy only requirements file for caching
+COPY requirements.txt .
+
+# --- Install Python dependencies
 RUN pip3 install -r requirements.txt
+
+# --- Copy the rest of the application
+COPY . .
 
 # --- Expose Ollama's port ---
 EXPOSE 11434
