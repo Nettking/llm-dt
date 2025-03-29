@@ -30,7 +30,8 @@ def main():
 
     # Step 4: Build the vector index
     print("🔍 Building index...")
-    index = VectorStoreIndex.from_documents(documents, embed_model="local")
+    embed_model = OllamaEmbedding(model_name="nomic-embed-text")
+    index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
 
     # Step 5: Create a query engine
     query_engine = index.as_query_engine(llm=index_llm)
