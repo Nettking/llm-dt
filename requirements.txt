@@ -1,2 +1,3 @@
 requests
 llama_index
+llama-index-llms-ollama
