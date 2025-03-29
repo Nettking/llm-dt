@@ -28,8 +28,10 @@ EXPOSE 11434
 VOLUME ["/root/.ollama"]
 
 # --- Start Ollama, wait, pull model, then run the app ---
-CMD ollama serve & \
+    CMD ollama serve & \
     sleep 2 && \
+    cd /app && \
+    git pull && \
     python3 Tools/wait_for_ollama.py && \
     python3 Tools/pull.py && \
     python3 run.py
