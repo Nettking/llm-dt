@@ -32,7 +32,7 @@ VOLUME ["/root/.ollama"]
     sleep 2 && \
     cd /app && \
     git pull && \
-    pip3 install --no-cache-dir -r requirements.txt &&\
+    pip3 install -r requirements.txt &&\
     python3 Tools/wait_for_ollama.py && \
     python3 Tools/pull.py && \
     python3 run.py
