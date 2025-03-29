@@ -19,7 +19,7 @@ WORKDIR /app
 RUN git clone https://github.com/Nettking/llm-dt.git .
 
 # --- Install Python dependencies ---
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # --- Expose Ollama's port ---
 EXPOSE 11434
