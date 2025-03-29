@@ -204,24 +204,24 @@ class LLM:
                 print(line.decode("utf-8"))
         print("✅ Model pull complete.")
 
-        def list_available_models(self):
-    print("📦 Fetching list of available models from Ollama...")
-    try:
-        response = requests.get(f"http://{self.host}/api/tags")
-        if response.status_code != 200:
-            print(f"❌ Error fetching models: {response.status_code} - {response.text}")
-            return
+        
+    def list_available_models(self):
+        print("📦 Fetching list of available models from Ollama...")
+        try:
+            response = requests.get(f"http://{self.host}/api/tags")
+            if response.status_code != 200:
+                print(f"❌ Error fetching models: {response.status_code} - {response.text}")
+                return
 
-        tags_data = response.json()
-        models = tags_data.get("models", [])
-        if not models:
-            print("⚠️ No models found.")
-            return
+            tags_data = response.json()
+            models = tags_data.get("models", [])
+            if not models:
+                print("⚠️ No models found.")
+                return
 
-        print("✅ Available models:")
-        for model in models:
-            print(f" - {model.get('name')}")
+            print("✅ Available models:")
+            for model in models:
+                print(f" - {model.get('name')}")
 
-    except requests.exceptions.RequestException as e:
-        print(f"❌ Failed to connect to Ollama: {e}")
-
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Failed to connect to Ollama: {e}")
