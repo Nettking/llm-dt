@@ -14,11 +14,12 @@ RUN apt-get update && apt-get install -y \
 # --- Install Ollama ---
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
-# --- Clone your project repo ---
+# --- Clone repo first (to get requirements.txt)
 WORKDIR /app
 RUN git clone https://github.com/Nettking/llm-dt.git .
 
-# --- Install Python dependencies ---
+# --- Install Python dependencies before copying everything else (caching)
+COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
 # --- Expose Ollama's port ---
@@ -32,7 +33,6 @@ VOLUME ["/root/.ollama"]
     sleep 2 && \
     cd /app && \
     git pull && \
-    pip3 install -r requirements.txt &&\
     python3 Tools/wait_for_ollama.py && \
     python3 Tools/pull.py && \
     python3 run.py
