@@ -33,6 +33,7 @@ VOLUME ["/root/.ollama"]
     CMD ollama serve & \
     sleep 2 && \
     cd /app && \
+    git pull && \
     python3 Tools/wait_for_ollama.py && \
     python3 Tools/pull.py && \
     python3 run.py
