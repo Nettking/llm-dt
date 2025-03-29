@@ -1,4 +1,5 @@
 requests
-llama_index
+llama-index
 llama-index-llms-ollama
 llama-index-embeddings-huggingface
+sentence-transformers
