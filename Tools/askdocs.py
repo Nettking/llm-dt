@@ -3,7 +3,7 @@ import requests
 from typing import List
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
 from llama_index.llms.ollama import Ollama
-from llama_index.core.embeddings.base import BaseEmbedding
+from llama_index.embeddings.base import BaseEmbedding 
 from llm import LLM
 
 
