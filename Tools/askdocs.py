@@ -1,7 +1,8 @@
 import os
-from llama_index import VectorStoreIndex, SimpleDirectoryReader
-from llama_index.llms import Ollama
-from llm import LLM  # Replace with actual filename if needed
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
+from llama_index.llms.ollama import Ollama
+from llm import LLM
+
 
 
 def main():
