@@ -15,31 +15,32 @@ class LLM:
         self.model = model
 
     def _chat(self, prompt: str) -> str:
-    try:
-        response = requests.post(
-            f"http://{self.host}/api/chat",
-            json={"model": self.model, "messages": [{"role": "user", "content": prompt}]},
-            stream=True
-        )
+        try:
+            response = requests.post(
+                f"http://{self.host}/api/chat",
+                json={"model": self.model, "messages": [{"role": "user", "content": prompt}]},
+                stream=True
+            )
 
-        if response.status_code != 200:
-            print(f"❌ Error {response.status_code}: {response.text}")
+            if response.status_code != 200:
+                print(f"❌ Error {response.status_code}: {response.text}")
+                return ""
+
+            full_response = ""
+            for line in response.iter_lines():
+                if line:
+                    data = json.loads(line.decode("utf-8"))
+                    content = data.get("message", {}).get("content", "")
+                    full_response += content
+            
+            if not full_response:
+                print("⚠️ Warning: Ollama returned an empty response.")
+
+            return full_response.strip()
+
+        except requests.exceptions.RequestException as e:
+            print("❌ Failed to contact Ollama:", e)
             return ""
-
-        full_response = ""
-        for line in response.iter_lines():
-            if line:
-                data = json.loads(line.decode("utf-8"))
-                content = data.get("message", {}).get("content", "")
-                full_response += content
-        if not full_response:
-            print("⚠️ Warning: Ollama returned an empty response.")
-
-        return full_response.strip()
-
-    except requests.exceptions.RequestException as e:
-        print("❌ Failed to contact Ollama:", e)
-        return ""
 
 
     def clean_code(self, response: str) -> str:
@@ -202,3 +203,25 @@ class LLM:
             if line:
                 print(line.decode("utf-8"))
         print("✅ Model pull complete.")
+
+        def list_available_models(self):
+    print("📦 Fetching list of available models from Ollama...")
+    try:
+        response = requests.get(f"http://{self.host}/api/tags")
+        if response.status_code != 200:
+            print(f"❌ Error fetching models: {response.status_code} - {response.text}")
+            return
+
+        tags_data = response.json()
+        models = tags_data.get("models", [])
+        if not models:
+            print("⚠️ No models found.")
+            return
+
+        print("✅ Available models:")
+        for model in models:
+            print(f" - {model.get('name')}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Failed to connect to Ollama: {e}")
+
