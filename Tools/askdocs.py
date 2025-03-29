@@ -7,7 +7,7 @@ from llm import LLM
 
 def main():
     # Step 1: Load documents from "docs" folder
-    docs_path = "docs"
+    docs_path = "/Tools/docs"
     if not os.path.exists(docs_path):
         print("❌ 'docs' folder not found.")
         return
